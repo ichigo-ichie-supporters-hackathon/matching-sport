@@ -10,12 +10,42 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+ActiveRecord::Schema[7.0].define(version: 2024_12_17_071410) do
+  create_table "events", force: :cascade do |t|
+    t.string "address"
+    t.float "latitude"
+    t.float "longitude"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.string "comment"
+    t.integer "people_count"
+    t.string "position"
+    t.integer "subgenre_id", null: false
+    t.integer "user_id", null: false
+    t.integer "unmetched_gender"
+    t.integer "unmatched_age_min"
+    t.integer "unmatched_age_max"
+    t.boolean "is_matched", default: false
+    t.boolean "is_accepted", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subgenre_id"], name: "index_events_on_subgenre_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
+  end
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_17_062814) do
   create_table "genres", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "matching_event_groups", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "event_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_matching_event_groups_on_event_id"
+    t.index ["user_id"], name: "index_matching_event_groups_on_user_id"
   end
 
   create_table "subgenres", force: :cascade do |t|
@@ -25,9 +55,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_17_062814) do
     t.datetime "updated_at", null: false
     t.index ["genre_id"], name: "index_subgenres_on_genre_id"
   end
-
-  add_foreign_key "subgenres", "genres"
-
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -44,5 +71,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_17_062814) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-
+  add_foreign_key "events", "subgenres"
+  add_foreign_key "events", "users"
+  add_foreign_key "matching_event_groups", "events"
+  add_foreign_key "matching_event_groups", "users"
+  add_foreign_key "subgenres", "genres"
 end
