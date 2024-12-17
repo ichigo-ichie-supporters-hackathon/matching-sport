@@ -1,3 +1,3 @@
 class Subgenre < ApplicationRecord
-  belongs_to :genre_id
+  belongs_to :genre
 end
