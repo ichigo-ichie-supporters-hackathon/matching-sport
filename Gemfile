@@ -38,5 +38,12 @@ group :test do
   gem "guard-minitest",           "2.4.6"
 end
 
+
+group :production do
+  # Use PstgreSQL as the database for Active Record
+  gem 'pg'
+end
 # Windows ではタイムゾーン情報用の tzinfo-data gem を含める必要があります
 #gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
+
+gem "dockerfile-rails", ">= 1.6", :group => :development

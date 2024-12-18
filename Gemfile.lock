@@ -100,6 +100,8 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.5.0)
+    dockerfile-rails (1.6.25)
+      rails (>= 3.0.0)
     e2mmap (0.1.0)
     enum_help (0.0.19)
       activesupport (>= 3.0.0)
@@ -188,6 +190,7 @@ GEM
     parser (3.3.0.2)
       ast (~> 2.4.1)
       racc
+    pg (1.5.9)
     prism (0.19.0)
     pry (0.14.2)
       coderay (~> 1.1)
@@ -348,6 +351,7 @@ DEPENDENCIES
   capybara (= 3.38.0)
   debug (= 1.7.1)
   devise
+  dockerfile-rails (>= 1.6)
   enum_help
   guard (= 2.18.0)
   guard-minitest (= 2.4.6)
@@ -356,6 +360,7 @@ DEPENDENCIES
   jbuilder (= 2.11.5)
   minitest (= 5.18.0)
   minitest-reporters (= 1.6.0)
+  pg
   puma (= 5.6.8)
   rails (= 7.0.4.3)
   rails-controller-testing (= 1.0.5)
