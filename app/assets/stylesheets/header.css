@@ -1,0 +1,23 @@
+.auth-buttons {
+  display: flex;             /* フレックスボックスを使用 */
+  justify-content: flex-end; /* 子要素を右寄せ */
+  margin-top: 10px;          /* 上部に余白 */
+  margin-right: 20px;        /* 右側に余白 */
+  gap: 10px;                 /* ボタン間の間隔を設定 */
+}
+
+.button-as-link {
+  background: none;          /* 背景を透明に */
+  border: none;              /* 枠線を削除 */
+  color: #007BFF;            /* 青色のテキスト */
+  text-decoration: underline; /* 下線を追加 */
+  cursor: pointer;           /* マウスホバー時にポインタ表示 */
+  font-size: inherit;        /* 親要素のフォントサイズに合わせる */
+  font-family: inherit;      /* 親要素のフォントに合わせる */
+  padding: 0;                /* 余白を削除 */
+}
+
+.button-as-link:hover {
+  color: #0056b3;            /* ホバー時の色を濃い青色に */
+  text-decoration: none;     /* ホバー時に下線を非表示 */
+}
