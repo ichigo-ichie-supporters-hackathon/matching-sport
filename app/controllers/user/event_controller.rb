@@ -1,4 +1,6 @@
 class User::EventController < ApplicationController
+  before
+
   def index
     @events = Event.all
   end
@@ -13,7 +15,10 @@ class User::EventController < ApplicationController
   end
 
   def show
-    @event = Event.find(params[:id])
+    @event = current_user.events.find_by(id: params[:id])
+    if @event.nil?
+      redirect_to event_path, alert: "そのイベントは存在しません。"
+    end
   end
 
   def update
