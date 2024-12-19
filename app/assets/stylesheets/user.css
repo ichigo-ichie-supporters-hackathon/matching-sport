@@ -1,0 +1,83 @@
+/* 全体のレイアウト */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* タイトル */
+h1 {
+  text-align: center;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+/* イベントリスト全体 */
+.event-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* 各イベントカード */
+.event-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 300px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* カードヘッダー */
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+}
+
+.event-header h2 {
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+}
+
+.event-status {
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  color: #fff;
+  background-color: #28a745;
+}
+
+.event-status:not(.is-matched) {
+  background-color: #007bff;
+}
+
+/* カードボディ */
+.event-body p {
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.event-body strong {
+  color: #555;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 600px) {
+  .event-card {
+    width: 100%;
+  }
+}
