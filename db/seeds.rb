@@ -30,6 +30,23 @@ end
 
 address = ["東京都新宿区", "茨城県つくば市", "岡山県岡山市", "北海道札幌", "沖縄県那覇市"]
 
+# Event.create!(
+#     address: "同じアドレス",
+#     latitude: 0,
+#     longitude: 0,
+#     start_time: DateTime.now,
+#     end_time: DateTime.now,
+#     comment: "コメント",
+#     people_count: 2,
+#     position: "ポジション",
+#     subgenre_id: Subgenre.find(1).id,
+#     user_id: User.find(1).id,
+#     unmetched_gender: 1,
+#     unmatched_age_min: 10,
+#     unmatched_age_max: 30,
+#     : f,
+#     is_accepted: false
+#   )
 5.times do |n|
    Event.create!(
     address: "#{address[n]}",
@@ -45,7 +62,7 @@ address = ["東京都新宿区", "茨城県つくば市", "岡山県岡山市", 
     unmetched_gender: rand(1..2),
     unmatched_age_min: n + 10,
     unmatched_age_max: (n+10)*3,
-    is_matched: [true, false].sample,
+    matched_id: nil,
     is_accepted: [true, false].sample
   )
 end
@@ -65,26 +82,26 @@ Event.create!(
     unmetched_gender: 1,
     unmatched_age_min: 10,
     unmatched_age_max: 30,
-    is_matched: false,
+    matched_id: 1,
     is_accepted: false
   )
-  Event.create!(
-    address: "同じアドレス",
-    latitude: 0,
-    longitude: 0,
-    start_time: DateTime.now,
-    end_time: DateTime.now,
-    comment: "コメント",
-    people_count: 2,
-    position: "ポジション",
-    subgenre_id: Subgenre.find(1).id,
-    user_id: User.find(2).id,
-    unmetched_gender: 1,
-    unmatched_age_min: 10,
-    unmatched_age_max: 30,
-    is_matched: false,
-    is_accepted: false
-  )
+#   Event.create!(
+#     address: "同じアドレス",
+#     latitude: 0,
+#     longitude: 0,
+#     start_time: DateTime.now,
+#     end_time: DateTime.now,
+#     comment: "コメント",
+#     people_count: 2,
+#     position: "ポジション",
+#     subgenre_id: Subgenre.find(1).id,
+#     user_id: User.find(2).id,
+#     unmetched_gender: 1,
+#     unmatched_age_min: 10,
+#     unmatched_age_max: 30,
+#     is_matched: false,
+#     is_accepted: false
+#   )
   
 
 5.times do |n|
