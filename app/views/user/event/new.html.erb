@@ -1,2 +1,92 @@
 <h1>User::Event#new</h1>
 <p>Find me in app/views/user/event/new.html.erb</p>
+<h1>Create New Event</h1>
+
+<%= form_with(model: @event, url: user_event_index_path, local: true) do |form| %>
+  <div>
+    <%= form.label :address %>
+    <%= form.text_field :address, id: 'address', placeholder: 'Enter address' %>
+  </div>
+
+  <div id="map" style="height: 400px; width: 100%;"></div>
+
+  <div>
+    <%= form.label :latitude %>
+    <%= form.text_field :latitude, id: 'latitude', readonly: true %>
+  </div>
+
+  <div>
+    <%= form.label :longitude %>
+    <%= form.text_field :longitude, id: 'longitude', readonly: true %>
+  </div>
+
+  <div>
+    <%= form.label :genre %>
+    <%= form.collection_select :genre_id, @genres, :id, :name, { prompt: 'Select Genre' }, id: 'genre_select' %>
+  </div>
+
+  <div>
+    <%= form.label :subgenre %>
+    <%= form.collection_select :subgenre_id, @subgenres, :id, :name, { prompt: 'Select Subgenre' }, id: 'subgenre_select' %>
+  </div>
+
+  <%= form.submit 'Create Event' %>
+<% end %>
+
+<script>
+  let map, marker, geocoder;
+
+  function initMap() {
+    geocoder = new google.maps.Geocoder();
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: 35.6895, lng: 139.6917 }, // Default to Tokyo
+      zoom: 13,
+    });
+
+    marker = new google.maps.Marker({
+      position: { lat: 35.6895, lng: 139.6917 },
+      map: map,
+      draggable: true,
+    });
+
+    marker.addListener('dragend', function () {
+      let position = marker.getPosition();
+      document.getElementById('latitude').value = position.lat();
+      document.getElementById('longitude').value = position.lng();
+    });
+  }
+
+  function codeAddress() {
+    let address = document.getElementById('address').value;
+    geocoder.geocode({ address: address }, function (results, status) {
+      if (status === 'OK') {
+        map.setCenter(results[0].geometry.location);
+        marker.setPosition(results[0].geometry.location);
+        document.getElementById('latitude').value = results[0].geometry.location.lat();
+        document.getElementById('longitude').value = results[0].geometry.location.lng();
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  }
+
+  document.getElementById('address').addEventListener('blur', codeAddress);
+
+  document.getElementById('genre_select').addEventListener('change', function () {
+    let genreId = this.value;
+    fetch(`/subgenre?genre_id=${genreId}`)
+      .then(response => response.json())
+      .then(data => {
+        let subgenreSelect = document.getElementById('subgenre_select');
+        subgenreSelect.innerHTML = '<option value="">Select Subgenre</option>';
+        data.subgenres.forEach(subgenre => {
+          let option = document.createElement('option');
+          option.value = subgenre.id;
+          option.textContent = subgenre.name;
+          subgenreSelect.appendChild(option);
+        });
+      });
+  });
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials.dig(:google_maps, :api_key) %>&callback=initMap" async defer></script>

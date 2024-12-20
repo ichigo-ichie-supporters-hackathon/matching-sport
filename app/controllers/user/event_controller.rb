@@ -1,12 +1,27 @@
 class User::EventController < ApplicationController
+  before_action :authenticate_user!
+  
   def index
     @events = Event.all
   end
 
   def new
+    @event = Event.new
+    @genres = Genre.all
+    @subgenres = Subgenre.all
   end
 
   def create
+    @event = Event.new(event_params)
+    @event.user = current_user
+
+    if @event.save
+      redirect_to user_event_path(@event), notice: 'Event was successfully created.'
+    else
+      @genres = Genre.all
+      @subgenres = Subgenre.where(genre_id: @event.genre_id)
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit

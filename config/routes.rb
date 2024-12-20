@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
-  namespace :users do
+  namespace :user do
     resources :event
   end
   get 'home/index'
-  devise_for :users 
+  devise_for :user 
   root "home#index"  
 end
