@@ -3,6 +3,6 @@ Rails.application.routes.draw do
     resources :event
   end
   get 'home/index'
-  devise_for :user
+  devise_for :users
   root "home#index"
 end
