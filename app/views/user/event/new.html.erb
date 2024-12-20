@@ -3,7 +3,7 @@
 <%= form_with(model: @event, url: user_event_index_path, local: true) do |form| %>
   <% if @event.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@event.errors.count, "エラー") %>により、このイベントを保存できませんでした:</h2>
+      <h2>以下のエラーにより、このイベントを保存できませんでした:</h2>
       <ul>
         <% @event.errors.full_messages.each do |message| %>
           <li><%= message %></li>
@@ -13,11 +13,11 @@
   <% end %>
 
   <div>
-    <%= form.label :address, "住所" %>
+    <%= form.label :address, "開催場所" %>
     <%= form.text_field :address, id: 'address', placeholder: '住所を入力してください' %>
   </div>
 
-  <div id="map" style="height: 400px; width: 100%;"></div>
+  <div id="map" style="height: 400px; width: 100%; margin-bottom: 15px;"></div>
 
   <div>
     <%= form.hidden_field :latitude, id: 'latitude' %>
@@ -32,18 +32,18 @@
   <div>
     <%= form.label :end_time, "終了時間" %>
     <%= form.datetime_local_field :end_time, id: 'end_time' %>
+    <div id="end_time_error" style="color: red; display: none;">終了時間は開始時間より後である必要があります。</div>
   </div>
 
   <div>
     <%= form.label :genre, "ジャンル" %>
-    <%= form.collection_select :genre_id, @genres || [], :id, :name, { prompt: 'ジャンルを選択してください' }, { id: 'genre_select', name: '' } %>
+    <%= form.collection_select :genre_id, @genres || [], :id, :name, { prompt: 'ジャンルを選択してください' }, { id: 'genre_select' } %>
   </div>
 
   <div>
     <%= form.label :subgenre, "サブジャンル" %>
     <%= form.collection_select :subgenre_id, [], :id, :name, { prompt: 'サブジャンルを選択してください' }, id: 'subgenre_select' %>
   </div>
-
 
   <div>
     <%= form.label :position, "自分の行いたい役割" %>
@@ -105,10 +105,20 @@
   document.querySelector('form').addEventListener('submit', function (event) {
     const latitude = document.getElementById('latitude').value;
     const longitude = document.getElementById('longitude').value;
+    const startTime = new Date(document.getElementById('start_time').value);
+    const endTime = new Date(document.getElementById('end_time').value);
 
     if (!latitude || !longitude) {
       event.preventDefault();
       alert('有効な住所を入力して、緯度と経度を取得してください。');
+    }
+
+    // 終了時間が開始時間より前の場合のエラーメッセージ表示
+    if (endTime <= startTime) {
+      event.preventDefault();
+      document.getElementById('end_time_error').style.display = 'block';
+    } else {
+      document.getElementById('end_time_error').style.display = 'none';
     }
   });
 
