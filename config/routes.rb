@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  namespace :users do
+  namespace :user do
     resources :event
   end
   get 'home/index'
@@ -7,5 +7,5 @@ Rails.application.routes.draw do
   registrations: 'user/registrations',
   sessions: 'user/sessions'
 }
-  root "home#index"  
+  root "home#index" 
 end
