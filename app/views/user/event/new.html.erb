@@ -1,36 +1,66 @@
-<h1>User::Event#new</h1>
-<p>Find me in app/views/user/event/new.html.erb</p>
-<h1>Create New Event</h1>
+<h1>新しいイベントを作成</h1>
 
 <%= form_with(model: @event, url: user_event_index_path, local: true) do |form| %>
+  <% if @event.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@event.errors.count, "エラー") %>により、このイベントを保存できませんでした:</h2>
+      <ul>
+        <% @event.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div>
-    <%= form.label :address %>
-    <%= form.text_field :address, id: 'address', placeholder: 'Enter address' %>
+    <%= form.label :address, "住所" %>
+    <%= form.text_field :address, id: 'address', placeholder: '住所を入力してください' %>
   </div>
 
   <div id="map" style="height: 400px; width: 100%;"></div>
 
   <div>
-    <%= form.label :latitude %>
-    <%= form.text_field :latitude, id: 'latitude', readonly: true %>
+    <%= form.hidden_field :latitude, id: 'latitude' %>
+    <%= form.hidden_field :longitude, id: 'longitude' %>
   </div>
 
   <div>
-    <%= form.label :longitude %>
-    <%= form.text_field :longitude, id: 'longitude', readonly: true %>
+    <%= form.label :start_time, "開始時間" %>
+    <%= form.datetime_local_field :start_time, id: 'start_time' %>
   </div>
 
   <div>
-    <%= form.label :genre %>
-    <%= form.collection_select :genre_id, @genres, :id, :name, { prompt: 'Select Genre' }, id: 'genre_select' %>
+    <%= form.label :end_time, "終了時間" %>
+    <%= form.datetime_local_field :end_time, id: 'end_time' %>
   </div>
 
   <div>
-    <%= form.label :subgenre %>
-    <%= form.collection_select :subgenre_id, @subgenres, :id, :name, { prompt: 'Select Subgenre' }, id: 'subgenre_select' %>
+    <%= form.label :genre, "ジャンル" %>
+    <%= form.collection_select :genre_id, @genres || [], :id, :name, { prompt: 'ジャンルを選択してください' }, { id: 'genre_select', name: '' } %>
   </div>
 
-  <%= form.submit 'Create Event' %>
+  <div>
+    <%= form.label :subgenre, "サブジャンル" %>
+    <%= form.collection_select :subgenre_id, [], :id, :name, { prompt: 'サブジャンルを選択してください' }, id: 'subgenre_select' %>
+  </div>
+
+
+  <div>
+    <%= form.label :position, "自分の行いたい役割" %>
+    <%= form.text_field :position, id: 'position', placeholder: '例: ピッチャー' %>
+  </div>
+
+  <div>
+    <%= form.label :people_count, "一緒に参加したい人数(自分も含む)" %>
+    <%= form.select :people_count, options_for_select((2..4).map { |n| [n.to_s, n] }), { prompt: '人数を選択してください' }, id: 'people_count' %>
+  </div>
+
+  <div>
+    <%= form.label :comment, "何か一言あれば" %>
+    <%= form.text_area :comment, id: 'comment', placeholder: '久しぶりに、キャッチボールしたいと思って応募しました。' %>
+  </div>
+
+  <%= form.submit 'イベントを作成する' %>
 <% end %>
 
 <script>
@@ -39,7 +69,7 @@
   function initMap() {
     geocoder = new google.maps.Geocoder();
     map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: 35.6895, lng: 139.6917 }, // Default to Tokyo
+      center: { lat: 35.6895, lng: 139.6917 }, // 東京をデフォルトに設定
       zoom: 13,
     });
 
@@ -65,20 +95,38 @@
         document.getElementById('latitude').value = results[0].geometry.location.lat();
         document.getElementById('longitude').value = results[0].geometry.location.lng();
       } else {
-        alert('Geocode was not successful for the following reason: ' + status);
+        alert('住所の検索に失敗しました: ' + status);
+        document.getElementById('latitude').value = '';
+        document.getElementById('longitude').value = '';
       }
     });
   }
+
+  document.querySelector('form').addEventListener('submit', function (event) {
+    const latitude = document.getElementById('latitude').value;
+    const longitude = document.getElementById('longitude').value;
+
+    if (!latitude || !longitude) {
+      event.preventDefault();
+      alert('有効な住所を入力して、緯度と経度を取得してください。');
+    }
+  });
 
   document.getElementById('address').addEventListener('blur', codeAddress);
 
   document.getElementById('genre_select').addEventListener('change', function () {
     let genreId = this.value;
+
+    if (!genreId) {
+      document.getElementById('subgenre_select').innerHTML = '<option value="">サブジャンルを選択してください</option>';
+      return;
+    }
+
     fetch(`/subgenre?genre_id=${genreId}`)
       .then(response => response.json())
       .then(data => {
         let subgenreSelect = document.getElementById('subgenre_select');
-        subgenreSelect.innerHTML = '<option value="">Select Subgenre</option>';
+        subgenreSelect.innerHTML = '<option value="">サブジャンルを選択してください</option>';
         data.subgenres.forEach(subgenre => {
           let option = document.createElement('option');
           option.value = subgenre.id;

@@ -14,12 +14,17 @@ class User::EventController < ApplicationController
   def create
     @event = Event.new(event_params)
     @event.user = current_user
+
+    if @event.latitude.blank? || @event.longitude.blank?
+      flash[:alert] = 'Address is invalid. Please ensure latitude and longitude are set.'
+      render :new and return
+    end
   
     if @event.save
-      redirect_to user_event_path(@event), notice: 'イベントの登録に成功しました。'
+      redirect_to user_event_index_path, notice: 'イベントの登録に成功しました。'
     else
       @genres = Genre.all
-      @subgenres = Subgenre.where(genre_id: @event.genre_id)
+      @subgenres = Subgenre.all
       render :new, status: :unprocessable_entity
     end
   end
