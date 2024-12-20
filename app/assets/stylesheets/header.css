@@ -1,0 +1,65 @@
+.header {
+  background-color: #1a202c;
+  margin-bottom: 2rem;
+  z-index: 10;
+  position: relative;
+}
+.container {
+  max-width: 64rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 1.25rem 0.5rem;
+}
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.title {
+  display: flex;
+  justify-content: center;
+  font-weight: 800;
+  color: white;
+}
+.logo {
+  text-decoration: none;
+  font-family: 'Yu Gothic', '游ゴシック', sans-serif;
+  color: #fbfbfb;
+  font-size: 1.5rem;
+}
+.logo-image {
+  height: 80px; 
+  width: auto;  /* アスペクト比を保つ */
+  vertical-align: middle; /* 画像とテキストを揃える */
+  margin: 0 auto; 
+}
+
+.logo-text {
+  color: #ffffff;
+}
+.auth-buttons {
+  display: flex;             /* フレックスボックスを使用 */
+  justify-content: flex-end; /* 子要素を右寄せ */
+  margin-top: 10px;          /* 上部に余白 */
+  margin-right: 20px;        /* 右側に余白 */
+  gap: 10px;                 /* ボタン間の間隔を設定 */
+}
+
+.button-as-link {
+  background: none;          /* 背景を透明に */
+  border: none;              /* 枠線を削除 */
+  color: #ffffff;            
+  text-decoration: none;
+  cursor: pointer;           /* マウスホバー時にポインタ表示 */
+  font-size: inherit;        /* 親要素のフォントサイズに合わせる */
+  font-family: inherit;      /* 親要素のフォントに合わせる */
+  padding: 0;                /* 余白を削除 */
+}
+
+.button-as-link:hover {
+  color: #0056b3;            /* ホバー時の色を濃い青色に */
+  text-decoration: none;     /* ホバー時に下線を非表示 */
+}
