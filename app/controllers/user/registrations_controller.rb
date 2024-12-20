@@ -5,11 +5,9 @@ class User::RegistrationsController < Devise::RegistrationsController
   before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
-  # FIXME: gender_optionsの翻訳がされず英語のまま 
   def new
     @user = User.new
-    @gender_options = User.genders_i18n.invert.map{|key,value|[key,value]}
-  end
+    @gender_options = User.genders_i18n&.invert&.map { |key, value| [key, value] } || []  end
 
   # POST /resource
   # def create
@@ -58,9 +56,9 @@ class User::RegistrationsController < Devise::RegistrationsController
   end
 
   # The path used after sign up.
-  # def after_sign_up_path_for(resource)
-  #   super(resource)
-  # end
+  def after_sign_up_path_for(resource)
+    user_event_index_path
+  end
 
   # The path used after sign up for inactive accounts.
   # def after_inactive_sign_up_path_for(resource)
