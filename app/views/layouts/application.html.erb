@@ -10,17 +10,27 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <header>
-      <div class = "auth-buttons">
-        <% if user_signed_in? %>
-          <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "button-as-link" %>
-        <% else %>
-          <%= button_to "新規登録", new_user_registration_path, method: :get, class: "button-as-link"  %>
-          <%= button_to "ログイン", new_user_session_path, method: :get, class: "button-as-link" %>
-        <% end %>
+  <body class = "flex-container">
+    <div class = "header">
+      <div class = "container">
+        <div class = "content">
+          <div class = "title">
+            <a href = "/" class = "logo">
+              <%= image_tag 'logo_transparent.png', alt: 'スポッ友ロゴ', class: 'logo-image' %>
+              &nbsp;<span class = "log-text">スポッ友</span>
+            </a> 
+          </div>
+          <div class = "auth-buttons">
+            <% if user_signed_in? %>
+              <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "button-as-link" %>
+            <% else %>
+              <%= button_to "新規登録", new_user_registration_path, method: :get, class: "button-as-link"  %>
+              <%= button_to "ログイン", new_user_session_path, method: :get, class: "button-as-link" %>
+            <% end %>
+          </div>
+        </div>
       </div>
-    </header>
+    </div>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
     <%= yield %>
