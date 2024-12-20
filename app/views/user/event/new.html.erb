@@ -1,4 +1,7 @@
 <h1 style="text-align: center;">新しいイベントを作成</h1>
+<div style="text-align: center; margin-bottom: 20px;">
+  <%= link_to 'イベントの一覧ページに戻る', user_event_index_path, class: 'btn btn-secondary' %>
+</div>
 <turbo-frame id="event_form">
   <%= form_with(model: @event, url: user_event_index_path, local: false) do |form| %>
     <% if @event.errors.any? %>
