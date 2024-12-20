@@ -1,6 +1,6 @@
 <h1 style="text-align: center;">新しいイベントを作成</h1>
 <turbo-frame id="event_form">
-  <%= form_with(model: @event, url: user_event_index_path, local: true, data: { turbo_frame: 'event_form' }) do |form| %>
+  <%= form_with(model: @event, url: user_event_index_path, local: false) do |form| %>
     <% if @event.errors.any? %>
       <div id="error_explanation">
         <h2>以下のエラーにより、このイベントを保存できませんでした:</h2>

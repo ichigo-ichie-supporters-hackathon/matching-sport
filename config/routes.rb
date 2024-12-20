@@ -9,5 +9,5 @@ Rails.application.routes.draw do
   registrations: 'user/registrations',
   sessions: 'user/sessions'
 }
-  root "home#index"  
+  root "home#index" 
 end
