@@ -89,4 +89,4 @@
   });
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials.dig(:google_maps, :api_key) %>&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= raw Rails.application.credentials.google_maps[:api_key] %>&callback=initMap" async defer></script>

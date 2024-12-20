@@ -14,9 +14,9 @@ class User::EventController < ApplicationController
   def create
     @event = Event.new(event_params)
     @event.user = current_user
-
+  
     if @event.save
-      redirect_to user_event_path(@event), notice: 'Event was successfully created.'
+      redirect_to user_event_path(@event), notice: 'イベントの登録に成功しました。'
     else
       @genres = Genre.all
       @subgenres = Subgenre.where(genre_id: @event.genre_id)
