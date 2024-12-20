@@ -17,7 +17,8 @@ class User::EventController < ApplicationController
 
   def show
     @event = current_user.events.find_by(id: params[:id])
-    p current_user
+    
+    @matching_users = MatchingEventGroup.where(event_id: @event.id).includes(:user) 
   end
 
   def update
