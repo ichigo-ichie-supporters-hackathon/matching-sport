@@ -1,6 +1,9 @@
 class User::EventController < ApplicationController
+  before_action :authenticate_user!
+
   def index
-    @events = Event.all
+    @events = current_user.events
+    p current_user
   end
 
   def new
@@ -13,7 +16,8 @@ class User::EventController < ApplicationController
   end
 
   def show
-    @event = Event.find(params[:id])
+    @event = current_user.events.find_by(id: params[:id])
+    p current_user
   end
 
   def update

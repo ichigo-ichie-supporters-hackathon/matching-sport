@@ -1,0 +1,25 @@
+<h1>イベントが作られた時点でのマッチング判定</h1>
+
+<div class = "event-list">
+  <div class = "event-card">
+    <div class = "event-header">
+      <h2><%= @event.address %></h2>
+      <span class = "event-status">
+        <%= @event.is_matched ? '🟡 マッチング済み、終了' : '🔴 マッチング未成立' %>
+      </span>
+    </div>
+    <div class="event-body">
+      <p><strong>開始時間:</strong> <%= @event.start_time.strftime('%Y年%m月%d日 %H:%M') %></p>
+      <p><strong>終了時間:</strong> <%= @event.end_time.strftime('%Y年%m月%d日 %H:%M') %></p>
+      <p><strong>コメント:</strong> <%= @event.comment %></p>
+      <p><strong>参加募集人数:</strong> <%= @event.people_count %> 人</p>
+      <p><strong>希望ポジション:</strong> <%= @event.position %></p>
+      <p><strong>サブジャンル:</strong> <%= @event.subgenre_id %></p>
+      <p><strong>希望しない性別:</strong> <%= @event.unmetched_gender %></p>
+      <p><strong>希望しない年齢:</strong> <%= @event.unmatched_age_min %>歳 ～ <%= @event.unmatched_age_max %>歳</p>
+      <p><strong>承認状況:</strong> <%= @event.is_accepted ? '✔ 承認済み' : '⏳ 未承認' %></p>
+    </div>
+  </div>
+</div>
+
+
