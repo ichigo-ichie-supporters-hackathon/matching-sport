@@ -1,0 +1,94 @@
+/* フォーム全体のスタイル */
+.user-authentication {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* フォーム見出し */
+.user-authentication h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+/* 各フィールド */
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.field label {
+  font-size: 1rem;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 0;
+  color: #333;
+}
+
+.field input:not([type = "checkbox"]), .field select {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* フォーカス時のスタイル */
+.field input:focus, .field select:focus {
+  border-color: #007BFF;
+  outline: none;
+}
+
+/* パスワード入力のスタイル */
+.field em {
+  font-size: 0.875rem;
+  color: #999;
+}
+
+/* ボタンのスタイル */
+.actions {
+  text-align: center;
+}
+
+.actions input[type="submit"] {
+  background-color: #007BFF;
+  color: white;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.actions input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* エラーメッセージ */
+.error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+/* リンクのスタイル */
+form .links {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+form .links a {
+  color: #007BFF;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+form .links a:hover {
+  text-decoration: underline;
+}
