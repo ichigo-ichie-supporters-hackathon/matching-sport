@@ -16,7 +16,7 @@ class User::EventController < ApplicationController
     @event.user = current_user
 
     if @event.latitude.blank? || @event.longitude.blank?
-      @event.errors.add(:address, '住所が無効です。')
+      @event.errors.add(:address, '開催場所が無効です。')
       @genres = Genre.all
       @subgenres = Subgenre.all # 必要なsubgenresを再設定
       render :new, status: :unprocessable_entity and return

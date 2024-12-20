@@ -1,9 +1,9 @@
-body {
+#event_form body {
   font-family: Arial, sans-serif;
   padding: 20px;
 }
 
-form {
+#event_form form {
   max-width: 600px;
   margin: 0 auto;
   background: #ffffff;
@@ -12,17 +12,17 @@ form {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-form div {
+#event_form form div {
   margin-bottom: 15px;
 }
 
-label {
+#event_form label {
   display: block;
   font-weight: bold;
   margin-bottom: 5px;
 }
 
-input, select, textarea {
+#event_form input, event_form select, event_form textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
@@ -30,7 +30,7 @@ input, select, textarea {
   box-sizing: border-box;
 }
 
-input[type="submit"] {
+#event_form input[type="submit"] {
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -39,12 +39,11 @@ input[type="submit"] {
   border-radius: 4px;
   font-size: 16px;
 }
-
-input[type="submit"]:hover {
+#event_form input[type="submit"]:hover {
   background-color: #0056b3;
 }
 
-#error_explanation {
+#event_form #error_explanation {
   background: #ffe6e6;
   padding: 10px;
   border: 1px solid #ffcccc;
@@ -52,31 +51,31 @@ input[type="submit"]:hover {
   margin-bottom: 15px;
 }
 
-#error_explanation h2 {
+#event_form #error_explanation h2 {
   margin: 0 0 10px;
   color: #d8000c;
 }
 
-#error_explanation ul {
+#event_form #error_explanation ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-#error_explanation li {
+#event_form #error_explanation li {
   color: #d8000c;
 }
 
 @media (max-width: 600px) {
-  form {
+  #event_form form {
     padding: 15px;
   }
 
-  input, select, textarea {
+  #event_form input, #event_form select, #event_form textarea {
     padding: 8px;
   }
 
-  input[type="submit"] {
+  #event_form input[type="submit"] {
     padding: 8px 12px;
     font-size: 14px;
   }
