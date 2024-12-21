@@ -24,7 +24,7 @@
             <% if user_signed_in? %>
              <!-- プロフィール写真を追加 -->
              <%= link_to edit_user_registration_path do %>
-                <%= image_tag current_user.profile_picture, alt: "プロフィール写真", class: 'profile-picture' if current_user.profile_picture.attached? %>
+                <%= image_tag(current_user.profile_picture.attached? ? current_user.profile_picture : 'initial_icon.png', alt: "プロフィール写真", class: 'profile-picture')%>
              <% end %>
               <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "button-as-link" %>
             <% else %>
