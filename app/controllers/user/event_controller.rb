@@ -1,5 +1,6 @@
 class User::EventController < ApplicationController
   before_action :authenticate_user!
+  require 'geocoder'
 
   def index
     @events = current_user.events
@@ -37,7 +38,6 @@ class User::EventController < ApplicationController
     if @event.save
       # マッチングのアルゴリズムを実装する
       match_event(@event)
-      redirect_to user_event_path(@event), notice: 'イベントの登録に成功しました。', turbo: false
     else
       load_genres_and_subgenres
       render :new, status: :unprocessable_entity and return
@@ -75,30 +75,35 @@ class User::EventController < ApplicationController
     # すでにマッチングしていないEventかつ、今の時間よりも開始時間が後のものかつ、自分以外のユーザーが作成したイベントを抽出する
     matching_events = Event.where(matched_id: nil).where("start_time > ?", Time.current).where.not(user_id: current_user.id)
     # サブジャンルが一致するイベントを優先
-    matching_events = matching_events.where(genre_id: new_event.genre_id).where(sub_genre_id: new_event.sub_genre_id)
-    matching_events = mathing_events.where(genre_id: new_event.genre_id) if matching_events.empty?
+    matching_events = matching_events.where(subgenre_id: new_event.subgenre_id)
+    # サブジャンルが一致しない場合に、ジャンルを基に絞り込み
+    if matching_events.empty?
+      matching_events = matching_events.joins(:subgenre).where(subgenres: { genre_id: new_event.subgenre.genre_id })
+    end
+    
 
     # 時間でまず絞り込む
     matching_events = matching_events.where("start_time <= ? AND end_time >= ?", new_event.end_time, new_event.start_time)
 
-    # 位置情報でさらに絞り込む（Geocoderを利用）
-    matching_events = matching_events.near([new_event.latitude, new_event.longitude], 10, units: :km)
-
-    # 残りのイベントをRuby側で絞り込む（もし必要なら）
-    matching_events = matching_events.select do |event|
-      is_time_overlap = event.start_time <= new_event.end_time && new_event.start_time <= event.end_time
-      is_time_overlap
+     # 時間と場所が近いイベントを絞り込み
+     matching_events = matching_events.select do |event|
+      location_close = Geocoder::Calculations.distance_between([event.latitude, event.longitude], [new_event.latitude, new_event.longitude]) < 5 # 5km以内
+      location_close
     end
-    # 条件に合致するか
+    # TODO: 条件に合致するか 
      
-    # 最も近いイベントを選択する
-    best_match_event = mathing.events.min_by(&:start_time)
+    # TODO: 人数を考慮する
+  
+    # 最も近いイベントを選択する TODO: 改良の余地あり？
+    best_match_event = matching_events.min_by(&:start_time)
     if best_match_event
-      new_event.update(matched_id: new_event.event_id)
-      best_match_event.update(matched_event: new_event.event_id)
+      new_event.update(matched_id: new_event.id)
+      best_match_event.update(matched_id: new_event.id)
+      redirect_to user_event_path(@event), notice: 'マッチングに成功しました。', turbo: false
+      # TODO: マッチング成功した場合に演出がほしい
     else 
       # マッチングするイベントが見つからなかった場合
-      flash[:notice] = "マッチングするまでお待ちください"
+      redirect_to user_event_path(@event), notice: 'イベントの登録に成功しました。', turbo: false
     end
   end
 
