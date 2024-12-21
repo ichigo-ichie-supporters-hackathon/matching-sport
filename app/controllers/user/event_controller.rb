@@ -49,6 +49,9 @@ class User::EventController < ApplicationController
   end
 
   def show
+    @event = Event.find(params[:id])
+
+    # マッチングされているイベントとユーザーを取得
     @main_event = @event.matched_id.nil? ? @event : @event.matched_event
     @linked_events = @main_event.matching_events
   end

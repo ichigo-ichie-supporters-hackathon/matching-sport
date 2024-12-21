@@ -1,6 +1,26 @@
 <div id="event-detail">
   <h1>イベント詳細</h1>
 
+  <div class="event-me">
+    <h2>自分が作成したイベント情報</h2>
+    <p><strong>住所:</strong> <%= @event.address %></p>
+    <p><strong>開始時間:</strong> <%= @event.start_time.strftime('%Y年%m月%d日 %H:%M') %></p>
+    <p><strong>終了時間:</strong> <%= @event.end_time.strftime('%Y年%m月%d日 %H:%M') %></p>
+    <p><strong>コメント:</strong> <%= @event.comment %></p>
+    <p><strong>参加人数:</strong> <%= @event.people_count %></p>
+    <p><strong>作成者:</strong> 
+    <%= @event.user.name %> 
+    (<%= case @event.user.gender
+      when 'male'
+        '男性'
+      when 'female'
+        '女性'
+      else
+        'その他'
+      end %>)
+     </p>
+  </div>
+
   <div class="event-info">
     <h2>イベント情報</h2>
     <p><strong>住所:</strong> <%= @main_event.address %></p>
@@ -8,7 +28,17 @@
     <p><strong>終了時間:</strong> <%= @main_event.end_time.strftime('%Y年%m月%d日 %H:%M') %></p>
     <p><strong>コメント:</strong> <%= @main_event.comment %></p>
     <p><strong>参加人数:</strong> <%= @main_event.people_count %></p>
-    <p><strong>作成者:</strong> <%= @main_event.user.name %> (<%= @main_event.user.gender == 0 ? '男性' : '女性' %>)</p>
+    <p><strong>作成者:</strong> 
+    <%= @main_event.user.name %> 
+    (<%= case @main_event.user.gender
+      when 'male'
+        '男性'
+      when 'female'
+        '女性'
+      else
+        'その他'
+      end %>)
+     </p>
   </div>
 
   <% if @linked_events.exists? %>
@@ -17,7 +47,17 @@
       <% @linked_events.each do |event| %>
         <div class="linked-event">
           <p><strong>住所:</strong> <%= event.address %></p>
-          <p><strong>作成者:</strong> <%= event.user.name %> (<%= event.user.gender == 0 ? '男性' : '女性' %>)</p>
+          <p><strong>作成者:</strong> 
+           <%= @main_event.user.name %> 
+          (<%= case @main_event.user.gender
+            when 'male'
+              '男性'
+            when 'female'
+              '女性'
+            else
+              'その他'
+            end %>)
+          </p>
           <p><strong>コメント:</strong> <%= event.comment %></p>
         </div>
       <% end %>
