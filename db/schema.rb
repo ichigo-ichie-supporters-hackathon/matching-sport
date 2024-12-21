@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_20_142740) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_21_090708) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -68,15 +68,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_20_142740) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "matching_event_groups", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "event_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["event_id"], name: "index_matching_event_groups_on_event_id"
-    t.index ["user_id"], name: "index_matching_event_groups_on_user_id"
-  end
-
   create_table "subgenres", force: :cascade do |t|
     t.string "name"
     t.integer "genre_id", null: false
@@ -106,7 +97,5 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_20_142740) do
   add_foreign_key "events", "events", column: "matched_id"
   add_foreign_key "events", "subgenres"
   add_foreign_key "events", "users"
-  add_foreign_key "matching_event_groups", "events"
-  add_foreign_key "matching_event_groups", "users"
   add_foreign_key "subgenres", "genres"
 end
