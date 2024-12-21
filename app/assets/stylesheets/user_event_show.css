@@ -1,0 +1,125 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+#event-detail {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  color: #444;
+  margin: 10px 0;
+  text-align: center;
+}
+
+p {
+  margin: 8px 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* イベント情報 */
+.event-me {
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  background-color: #fafafa;
+}
+
+.event-me p strong {
+  color: #555;
+}
+
+.event-info {
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  background-color: #b7ebc6;
+}
+
+.event-info p strong {
+  color: #555;
+}
+
+/* マッチングイベント */
+.matched-events {
+  margin-top: 20px;
+}
+
+.linked-event {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.details-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.details-link:hover {
+  text-decoration: underline;
+}
+
+/* 空のマッチングメッセージ */
+.no-matched-events {
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  #event-detail {
+    padding: 10px;
+  }
+
+  .event-info, .linked-event {
+    padding: 10px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  h1, h2 {
+    font-size: 20px;
+  }
+
+  .details-link {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  h1 {
+    font-size: 18px;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+
+  p {
+    font-size: 12px;
+  }
+
+  .details-link {
+    font-size: 12px;
+  }
+}

@@ -51,6 +51,7 @@
                 <p><strong>希望しない性別:</strong> <%= gender %></p>
                 <p><strong>希望しない年齢:</strong> <%= event.unmatched_age_min %>歳 ～ <%= event.unmatched_age_max %>歳</p>
                 <p><strong>承認状況:</strong> <%= event.is_accepted ? '✔ 承認済み' : '⏳ 未承認' %></p>
+                <%= link_to "詳細", user_event_path(event), class: 'event-link' %>
               </div>
             </div>
           <% end %>
