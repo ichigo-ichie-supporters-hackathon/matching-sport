@@ -22,7 +22,7 @@
   margin-bottom: 5px;
 }
 
-#event_form input, event_form select, event_form textarea {
+#event_form input, #event_form select, #event_form textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
@@ -30,7 +30,7 @@
   box-sizing: border-box;
 }
 
-#event_form input[type="submit"] {
+#event_form button[type="button"] {
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -38,8 +38,11 @@
   cursor: pointer;
   border-radius: 4px;
   font-size: 16px;
+  display: block;
+  margin: 0 auto;
 }
-#event_form input[type="submit"]:hover {
+
+#event_form button[type="button"]:hover {
   background-color: #0056b3;
 }
 
@@ -75,7 +78,7 @@
     padding: 8px;
   }
 
-  #event_form input[type="submit"] {
+  #event_form button[type="button"] {
     padding: 8px 12px;
     font-size: 14px;
   }

@@ -17,7 +17,7 @@ class User::EventController < ApplicationController
     @event.user = current_user
   
     if @event.latitude.blank? || @event.longitude.blank?
-      @event.errors.add(:address, '開催場所が無効です。')
+      @event.errors.add(:address, 'マップにピンが刺されていません')
       load_genres_and_subgenres
       render :new, status: :unprocessable_entity and return
     end
@@ -42,7 +42,8 @@ class User::EventController < ApplicationController
 
   def show
     @event = current_user.events.find_by(id: params[:id])
-    p current_user
+    
+    @matching_users = MatchingEventGroup.where(event_id: @event.id).includes(:user) 
   end
 
   def update

@@ -1,3 +1,13 @@
+<turbo-stream action="update" target="flash_messages">
+  <template>
+    <% flash.each do |key, message| %>
+      <div class="alert alert-<%= key %>">
+        <%= message %>
+      </div>
+    <% end %>
+  </template>
+</turbo-stream>
+
 <h1 style="text-align: center;">新しいイベントを作成</h1>
 <div style="text-align: center; margin-bottom: 20px;">
   <%= link_to 'イベントの一覧ページに戻る', user_event_index_path, class: 'btn btn-secondary' %>
@@ -65,7 +75,7 @@
       <%= form.text_area :comment, id: 'comment', placeholder: '久しぶりに、キャッチボールしたいと思って応募しました。' %>
     </div>
 
-    <%= form.submit 'イベントを作成する' %>
+    <%= form.button 'イベントを作成する', type: 'button', onclick: 'submit();' %>
   <% end %>
 </turbo-frame>
 

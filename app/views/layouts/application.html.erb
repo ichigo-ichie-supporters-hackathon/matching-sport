@@ -31,8 +31,16 @@
         </div>
       </div>
     </div>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <%# flashの表示 %>
+    <% if flash.any? %>
+      <div id="toast-container">
+        <% flash.each do |type, message| %>
+          <div class="toast <%= type %>">
+            <%= message %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
     <%= yield %>
   </body>
 </html>
