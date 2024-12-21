@@ -94,6 +94,11 @@ form .links a:hover {
 }
 
 /* ユーザー編集の画面 */
+.current-profile-picture{
+  font-size: 0.9em; /* 少し小さめの文字 */
+  color: #555; /* 視認性の高い落ち着いた色 */
+  margin-bottom: 5px; /* ファイル名と入力欄の間に余白 */
+}
 .delete-account-section {
   margin-top: 30px;
   text-align: center;
