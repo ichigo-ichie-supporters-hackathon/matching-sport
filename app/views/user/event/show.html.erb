@@ -48,8 +48,8 @@
         <div class="linked-event">
           <p><strong>住所:</strong> <%= event.address %></p>
           <p><strong>作成者:</strong> 
-           <%= @main_event.user.name %> 
-          (<%= case @main_event.user.gender
+           <%= event.user.name %> 
+          (<%= case event.user.gender
             when 'male'
               '男性'
             when 'female'
