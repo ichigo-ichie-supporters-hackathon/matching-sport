@@ -10,9 +10,13 @@ class User::RegistrationsController < Devise::RegistrationsController
     @gender_options = User.genders_i18n&.invert&.map { |key, value| [key, value] } || []  end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    super do |resource|
+      if params[:user][:profile_picture]
+        resource.profile_picture.attach(params[:user][:profile_picture])
+      end
+    end
+  end
 
   # GET /resource/edit
   # def edit
@@ -47,12 +51,12 @@ class User::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :age, :gender])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :age, :gender, :profile_picture])
   end
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_account_update_params
-    devise_parameter_sanitizer.permit(:account_update, keys: [:name, :age, :gender])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:name, :age, :gender, :profile_picture])
   end
 
   # The path used after sign up.
