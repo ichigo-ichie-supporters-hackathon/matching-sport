@@ -10,113 +10,54 @@
     </div>
   </div>
 </div>
-<h1>イベントのマッチング判定</h1>
 
-<h3>すでにマッチングしているイベント</h3>
-<% @events.where("start_time >= ?", Time.current).each do |event| %>
-  <div class="event-list">
-  <% if event.matched_id != nil %>
-    <div class="event-card">
-      <div class="event-header">
-        <h2><%= event.address %></h2>
-        <span class="event-status">
-        🟡 マッチング済み、終了
-        </span>
-      </div>
-      <div class="event-body">
-        <p><strong>開始時間:</strong> <%= event.start_time.strftime('%Y年%m月%d日 %H:%M') %></p>
-        <p><strong>終了時間:</strong> <%= event.end_time.strftime('%Y年%m月%d日 %H:%M') %></p>
-        <p><strong>コメント:</strong> <%= event.comment %></p>
-        <p><strong>参加募集人数:</strong> <%= event.people_count %> 人</p>
-        <p><strong>希望ポジション:</strong> <%= event.position %></p>
-        <p><strong>サブジャンル:</strong> <%= event.subgenre_id %></p>
-        <p><strong>希望しない性別:</strong> <%= event.unmetched_gender %></p>
-        <p><strong>希望しない年齢:</strong> <%= event.unmatched_age_min %>歳 ～ <%= event.unmatched_age_max %>歳</p>
-        <p><strong>承認状況:</strong> <%= event.is_accepted ? '✔ 承認済み' : '⏳ 未承認' %></p>        
-      </div>
+<div class="events-container">
+  <h1>イベントのマッチング判定</h1>
+
+  <% ["すでにマッチングしているイベント", "まだマッチングしていないイベント", "過去のイベント", "マッチングできなかった過去のイベント"].each_with_index do |title, index| %>
+    <div class="event-section">
+      <h2><%= title %></h2>
+      <% events = case index
+        when 0 then @events.where("start_time >= ?", Time.current).where.not(matched_id: nil)
+        when 1 then @events.where("start_time >= ?", Time.current).where(matched_id: nil)
+        when 2 then @events.where("start_time < ?", Time.current).where.not(matched_id: nil)
+        when 3 then @events.where("start_time < ?", Time.current).where(matched_id: nil)
+      end %>
+      
+      <% if events.present? %>
+        <div class="event-list">
+          <% events.each do |event| %>
+            <div class="event-card">
+              <div class="event-header">
+                <h3><%= event.address %></h3>
+                <span class="event-status <%= event.matched_id ? 'matched' : 'unmatched' %>">
+                  <%= event.matched_id ? '🟡 マッチング済み' : '🔴 マッチング未成立' %>
+                </span>
+              </div>
+              <div class="event-body">
+                <p><strong>開始時間:</strong> <%= event.start_time.strftime('%Y年%m月%d日 %H:%M') %></p>
+                <p><strong>終了時間:</strong> <%= event.end_time.strftime('%Y年%m月%d日 %H:%M') %></p>
+                <p><strong>コメント:</strong> <%= event.comment %></p>
+                <p><strong>参加募集人数:</strong> <%= event.people_count %> 人</p>
+                <p><strong>希望ポジション:</strong> <%= event.position %></p>
+                <p><strong>サブジャンル:</strong> <%= event.subgenre.name %></p>
+                <% if  event.unmetched_gender == 1 %>
+                  <% gender = "男性" %>
+                <%  elsif event.unmetched_gender == 2 %>
+                  <% gender = "女性" %>
+                <% else %>
+                  <% gender = "選択なし" %>
+                <% end %>
+                <p><strong>希望しない性別:</strong> <%= gender %></p>
+                <p><strong>希望しない年齢:</strong> <%= event.unmatched_age_min %>歳 ～ <%= event.unmatched_age_max %>歳</p>
+                <p><strong>承認状況:</strong> <%= event.is_accepted ? '✔ 承認済み' : '⏳ 未承認' %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="no-events">該当するイベントがありません。</p>
+      <% end %>
     </div>
-  </div>
   <% end %>
-<% end %>
-
-<h3>まだマッチングしていないイベント</h3>
-<% @events.where("start_time >= ?", Time.current).each do |event| %>
-  <div class="event-list">
-  <% if event.matched_id == nil %>
-    <div class="event-card">
-      <div class="event-header">
-        <h2><%= event.address %></h2>
-        <span class="event-status">
-        🔴 マッチング未成立
-        </span>
-      </div>
-      <div class="event-body">
-        <p><strong>開始時間:</strong> <%= event.start_time.strftime('%Y年%m月%d日 %H:%M') %></p>
-        <p><strong>終了時間:</strong> <%= event.end_time.strftime('%Y年%m月%d日 %H:%M') %></p>
-        <p><strong>コメント:</strong> <%= event.comment %></p>
-        <p><strong>参加募集人数:</strong> <%= event.people_count %> 人</p>
-        <p><strong>希望ポジション:</strong> <%= event.position %></p>
-        <p><strong>サブジャンル:</strong> <%= event.subgenre_id %></p>
-        <p><strong>希望しない性別:</strong> <%= event.unmetched_gender %></p>
-        <p><strong>希望しない年齢:</strong> <%= event.unmatched_age_min %>歳 ～ <%= event.unmatched_age_max %>歳</p>
-        <p><strong>承認状況:</strong> <%= event.is_accepted ? '✔ 承認済み' : '⏳ 未承認' %></p>        
-      </div>
-    </div>
-  </div>
-  <% end %>
-<% end %>
-
-<h3>過去のイベント</h3>
-<% @events.where("start_time < ?", Time.current).each do |event| %>
-  <div class="event-list">
-    <% if event.matched_id != nil %>
-    <div class="event-card">
-      <div class="event-header">
-        <h2><%= event.address %></h2>
-        <span class="event-status">
-        🟡 マッチング済み、終了
-        </span>
-      </div>
-      <div class="event-body">
-        <p><strong>開始時間:</strong> <%= event.start_time.strftime('%Y年%m月%d日 %H:%M') %></p>
-        <p><strong>終了時間:</strong> <%= event.end_time.strftime('%Y年%m月%d日 %H:%M') %></p>
-        <p><strong>コメント:</strong> <%= event.comment %></p>
-        <p><strong>参加募集人数:</strong> <%= event.people_count %> 人</p>
-        <p><strong>希望ポジション:</strong> <%= event.position %></p>
-        <p><strong>サブジャンル:</strong> <%= event.subgenre_id %></p>
-        <p><strong>希望しない性別:</strong> <%= event.unmetched_gender %></p>
-        <p><strong>希望しない年齢:</strong> <%= event.unmatched_age_min %>歳 ～ <%= event.unmatched_age_max %>歳</p>
-        <p><strong>承認状況:</strong> <%= event.is_accepted ? '✔ 承認済み' : '⏳ 未承認' %></p>        
-      </div>
-    </div>
-  </div>
-  <% end %>
-<% end %>
-
-<h3>マッチングできなかった過去のイベント</h3>
-<% @events.where("start_time < ?", Time.current).each do |event| %>
-  <div class="event-list">
-    <% if event.matched_id == nil %>
-    <div class="event-card">
-      <div class="event-header">
-        <h2><%= event.address %></h2>
-        <span class="event-status">
-        🔴 マッチング未成立
-        </span>
-      </div>
-      <div class="event-body">
-        <p><strong>開始時間:</strong> <%= event.start_time.strftime('%Y年%m月%d日 %H:%M') %></p>
-        <p><strong>終了時間:</strong> <%= event.end_time.strftime('%Y年%m月%d日 %H:%M') %></p>
-        <p><strong>コメント:</strong> <%= event.comment %></p>
-        <p><strong>参加募集人数:</strong> <%= event.people_count %> 人</p>
-        <p><strong>希望ポジション:</strong> <%= event.position %></p>
-        <p><strong>サブジャンル:</strong> <%= event.subgenre_id %></p>
-        <p><strong>希望しない性別:</strong> <%= event.unmetched_gender %></p>
-        <p><strong>希望しない年齢:</strong> <%= event.unmatched_age_min %>歳 ～ <%= event.unmatched_age_max %>歳</p>
-        <p><strong>承認状況:</strong> <%= event.is_accepted ? '✔ 承認済み' : '⏳ 未承認' %></p>        
-      </div>
-    </div>
-  </div>
-  <% end %>
-<% end %>
-
+</div>

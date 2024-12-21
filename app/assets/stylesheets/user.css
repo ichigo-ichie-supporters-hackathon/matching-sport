@@ -1,90 +1,171 @@
+/* 全体の基本設定 */
 body {
   font-family: Arial, sans-serif;
-  margin: 20px;
-  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
   color: #333;
 }
-
 h1 {
   text-align: center;
-  color: #444;
-  margin-bottom: 30px;
 }
 
-h3 {
-  text-align: center;
-  color: #444;
-  margin-bottom: -25px;
-  padding: 15px;
+h1, h2, h3 {
+  margin: 0;
 }
 
-/* イベントリスト全体 */
-.event-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.events-container {
+  max-width: 1200px;
   margin: 20px auto;
-  max-width: 800px;
   padding: 0 15px;
 }
 
-/* 各イベントカード */
-.event-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.event-box {
+  background-color: #ffffff;
+  border-radius: 10px;
   padding: 20px;
-  width: 300px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.event-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.event-description {
+  margin: 0 0 10px;
+  font-size: 16px;
+  text-align: center;
 }
 
-/* カードヘッダー */
+.center-button {
+  text-align: center;
+}
+
+.custom-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.custom-button:hover {
+  background-color: #0056b3;
+}
+
+/* イベントセクション */
+.event-section {
+  margin-bottom: 30px;
+}
+
+.event-section h2 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #444;
+}
+
+.event-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+/* イベントカード */
+.event-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .event-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
+  flex-wrap: nowrap;
+  gap: 10px;
 }
 
-.event-header h2 {
-  font-size: 18px;
-  color: #333;
+.event-header h3 {
   margin: 0;
+  font-size: 18px;
+  flex-shrink: 1;
 }
 
 .event-status {
-  font-size: 14px;
   padding: 5px 10px;
   border-radius: 15px;
+  font-size: 14px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.event-status.matched {
+  background-color: #ffdd57;
   color: #fff;
-  background-color: #28a745;
 }
 
-.event-status:not(.is-matched) {
-  background-color: #007bff;
+.event-status.unmatched {
+  background-color: #ff6b6b;
+  color: #fff;
 }
 
-/* カードボディ */
 .event-body p {
-  margin: 10px 0;
-  line-height: 1.5;
+  margin: 5px 0;
+  font-size: 14px;
 }
 
-.event-body strong {
-  color: #555;
+.no-events {
+  text-align: center;
+  font-size: 14px;
+  color: #999;
 }
 
 /* レスポンシブデザイン */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .event-card {
-    width: 100%;
+    max-width: 100%;
+  }
+
+  .event-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .event-header h3 {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .event-status {
+    font-size: 13px;
+    align-self: flex-start;
+  }
+
+  .custom-button {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .event-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .event-header h3 {
+    font-size: 14px;
+  }
+
+  .event-status {
+    font-size: 12px;
   }
 }
