@@ -71,8 +71,8 @@ class User::EventController < ApplicationController
 
   # マッチングのアルゴリズムの内容
   def match_event(new_event)
-    # すでにマッチングしていないEventかつ、今の時間よりも開始時間が後のものかつ、自分以外のユーザーが作成したイベントを抽出する
-    matching_events = Event.where(matched_id: nil).where("start_time > ?", Time.current).where.not(user_id: current_user.id)
+    # すでにマッチングしていないEventかつ、今の時間よりも開始時間が後のものかつ、自分以外のユーザーが作成したイベントかつ、募集人数が同じイベントを抽出する
+    matching_events = Event.where.not(remaining_people: 0).where("start_time > ?", Time.current).where.not(user_id: current_user.id).where(people_count: new_event.people_count)
     # サブジャンルが一致するイベントを優先
     matching_events = matching_events.where(subgenre_id: new_event.subgenre_id)
     # サブジャンルが一致しない場合に、ジャンルを基に絞り込み
@@ -89,15 +89,36 @@ class User::EventController < ApplicationController
       location_close = Geocoder::Calculations.distance_between([event.latitude, event.longitude], [new_event.latitude, new_event.longitude]) < 5 # 5km以内
       location_close
     end
-    # TODO: 条件に合致するか 
+    # TODO: 条件(マッチングしたくない性別、年齢)に合致するか 
+    # 二人だけなら考慮できる、3人以上は勘弁
      
-    # TODO: 人数を考慮する
-  
     # 最も近いイベントを選択する TODO: 改良の余地あり？
     best_match_event = matching_events.min_by(&:start_time)
     if best_match_event
-      new_event.update(matched_id: new_event.id)
-      best_match_event.update(matched_id: new_event.id)
+      if best_match_event.matched_id.nil?
+        best_match_event.update(matched_id: best_match_event.id)
+        new_event.update(matched_id: best_match_event.id)
+        best_match_event.update(remaining_people: best_match_event.remaining_people-1)
+        new_event.update(remaining_people: new_event.remaining_people-1)
+      else 
+        if best_match_event.matched_id == best_match_event.id
+          new_event.update(matched_id: best_match_event.id)
+          best_match_event.update(remaining_people: best_match_event.remaining_people-1)
+          new_event.update(remaining_people: new_event.remaining_people-1)
+          if best_match_event.remaining_people == 0
+            Event.where(matched_id: best_match_event.id).update_all(remaining_people: 0)
+          end
+        else
+          oldest_event = Event.where(id: best_match_event.matched_id).first
+          new_event.update(matched_id: oldest_event.id)
+          best_match_event.update(remaining_people: best_match_event.remaining_people-1)
+          new_event.update(remaining_people: new_event.remaining_people-1)
+          oldest_event.update(remaining_people: oldest_event.remaining_people-1)
+          if oldest_event.remaining_people == 0
+            Event.where(matched_id: oldest_event.id).update_all(remaining_people: 0)
+          end
+        end
+      end
       redirect_to user_event_path(@event), notice: 'マッチングに成功しました。', turbo: false
       # TODO: マッチング成功した場合に演出がほしい
     else 
