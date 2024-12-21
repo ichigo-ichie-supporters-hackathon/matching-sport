@@ -7,4 +7,5 @@ class Event < ApplicationRecord
 
 
   has_many :matching_event_groups
+  validates :address, :latitude, :longitude, :start_time, :end_time, :subgenre_id, :people_count, presence: true
 end

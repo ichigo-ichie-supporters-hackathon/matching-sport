@@ -1,0 +1,85 @@
+#event_form body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+#event_form form {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#event_form form div {
+  margin-bottom: 15px;
+}
+
+#event_form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+#event_form input, #event_form select, #event_form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+#event_form button[type="button"] {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  display: block;
+  margin: 0 auto;
+}
+
+#event_form button[type="button"]:hover {
+  background-color: #0056b3;
+}
+
+#event_form #error_explanation {
+  background: #ffe6e6;
+  padding: 10px;
+  border: 1px solid #ffcccc;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+#event_form #error_explanation h2 {
+  margin: 0 0 10px;
+  color: #d8000c;
+}
+
+#event_form #error_explanation ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#event_form #error_explanation li {
+  color: #d8000c;
+}
+
+@media (max-width: 600px) {
+  #event_form form {
+    padding: 15px;
+  }
+
+  #event_form input, #event_form select, #event_form textarea {
+    padding: 8px;
+  }
+
+  #event_form button[type="button"] {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}

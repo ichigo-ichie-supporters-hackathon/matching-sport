@@ -1,2 +1,208 @@
-<h1>User::Event#new</h1>
-<p>Find me in app/views/user/event/new.html.erb</p>
+<turbo-stream action="update" target="flash_messages">
+  <template>
+    <% flash.each do |key, message| %>
+      <div class="alert alert-<%= key %>">
+        <%= message %>
+      </div>
+    <% end %>
+  </template>
+</turbo-stream>
+
+<h1 style="text-align: center;">新しいイベントを作成</h1>
+<div style="text-align: center; margin-bottom: 20px;">
+  <%= link_to 'イベントの一覧ページに戻る', user_event_index_path, class: 'btn btn-secondary' %>
+</div>
+<turbo-frame id="event_form">
+  <%= form_with(model: @event, url: user_event_index_path, local: false) do |form| %>
+    <% if @event.errors.any? %>
+      <div id="error_explanation">
+        <h2>以下のエラーにより、このイベントを保存できませんでした:</h2>
+        <ul>
+          <% @event.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.label :address, "開催場所" %>
+      <%= form.text_field :address, id: 'address', placeholder: '住所を入力してください' %>
+    </div>
+
+    <p>開催場所を選択すると、マップにピンが刺されます。開催場所とピンの位置が違う場合や、詳細な場所の設定をしたい場合は、以下のマップでピンを動かして設定することができます。</p>
+
+    <div id="map" style="height: 400px; width: 100%; margin-bottom: 15px;"></div>
+
+    <div>
+      <%= form.hidden_field :latitude, id: 'latitude' %>
+      <%= form.hidden_field :longitude, id: 'longitude' %>
+    </div>
+
+    <div>
+      <%= form.label :start_time, "開始時間" %>
+      <%= form.datetime_local_field :start_time, id: 'start_time' %>
+    </div>
+
+    <div>
+      <%= form.label :end_time, "終了時間" %>
+      <%= form.datetime_local_field :end_time, id: 'end_time' %>
+      <div id="end_time_error" style="color: red; display: none;">終了時間は開始時間より後である必要があります。</div>
+    </div>
+
+    <div>
+      <%= form.label :genre, "ジャンル" %>
+      <%= form.collection_select :genre_id, @genres || [], :id, :name, { prompt: 'ジャンルを選択してください' }, { id: 'genre_select' } %>
+    </div>
+
+    <div>
+      <%= form.label :subgenre, "サブジャンル" %>
+      <%= form.collection_select :subgenre_id, @subgenres || [], :id, :name, { prompt: 'サブジャンルを選択してください' }, id: 'subgenre_select' %>
+    </div>
+
+    <div>
+      <%= form.label :people_count, "一緒に参加したい人数(自分も含む)" %>
+      <%= form.select :people_count, options_for_select((2..4).map { |n| [n.to_s, n] }), { prompt: '人数を選択してください' }, id: 'people_count' %>
+    </div>
+
+    <div>
+      <%= form.label :position, "自分の行いたい役割" %>
+      <%= form.text_field :position, id: 'position', placeholder: '例: ピッチャー' %>
+    </div>
+
+    <div>
+      <%= form.label :comment, "何か一言あれば" %>
+      <%= form.text_area :comment, id: 'comment', placeholder: '久しぶりに、キャッチボールしたいと思って応募しました。' %>
+    </div>
+
+    <%= form.button 'イベントを作成する', type: 'button', onclick: 'submit();' %>
+  <% end %>
+</turbo-frame>
+
+<script>
+  // Google Mapの初期化を行う関数
+  function initMap() {
+    let map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: 35.6895, lng: 139.6917 }, // 東京をデフォルトに設定
+      zoom: 13,
+    });
+
+    let marker = new google.maps.Marker({
+      position: { lat: 35.6895, lng: 139.6917 },
+      map: map,
+      draggable: true,
+    });
+
+    marker.addListener('dragend', function () {
+      let position = marker.getPosition();
+      document.getElementById('latitude').value = position.lat();
+      document.getElementById('longitude').value = position.lng();
+    });
+
+    // 住所検索を行った際の処理
+    document.getElementById('address')?.addEventListener('blur', function () {
+      codeAddress(map, marker);
+    });
+  }
+
+  // 住所検索を行う関数
+  function codeAddress(map, marker) {
+    let address = document.getElementById('address').value;
+    let geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ address: address }, function (results, status) {
+      if (status === 'OK') {
+        let location = results[0].geometry.location;
+        map.setCenter(location);
+        marker.setPosition(location); // ピンを新しい位置に更新
+
+        document.getElementById('latitude').value = location.lat();
+        document.getElementById('longitude').value = location.lng();
+      } else {
+        alert('住所の検索に失敗しました: ' + status);
+        document.getElementById('latitude').value = '';
+        document.getElementById('longitude').value = '';
+      }
+    });
+  }
+
+  // Turboのフレームが読み込まれた際にマップを初期化
+  document.addEventListener('turbo:frame-load', function () {
+    const mapElement = document.getElementById('map');
+    if (mapElement) {
+      initMap(); // マップを初期化
+    }
+  });
+
+  // ジャンル選択に基づいてサブジャンルを動的に更新
+  function attachGenreChangeEventListener() {
+    const genreSelect = document.getElementById('genre_select');
+    if (genreSelect) {
+      genreSelect.addEventListener('change', function () {
+        let genreId = this.value;
+
+        if (!genreId) {
+          document.getElementById('subgenre_select').innerHTML = '<option value="">サブジャンルを選択してください</option>';
+          return;
+        }
+
+        fetch(`/subgenre?genre_id=${genreId}`)
+          .then(response => response.json())
+          .then(data => {
+            let subgenreSelect = document.getElementById('subgenre_select');
+            subgenreSelect.innerHTML = '<option value="">サブジャンルを選択してください</option>';
+            data.subgenres.forEach(subgenre => {
+              let option = document.createElement('option');
+              option.value = subgenre.id;
+              option.textContent = subgenre.name;
+              subgenreSelect.appendChild(option);
+            });
+          });
+      });
+    }
+  }
+
+  function updateSubgenreFromInitialState() {
+    const genreSelect = document.getElementById('genre_select');
+    const subgenreSelect = document.getElementById('subgenre_select');
+    if (genreSelect && subgenreSelect) {
+      let selectedGenreId = genreSelect.value;
+
+      if (selectedGenreId) {
+        fetch(`/subgenre?genre_id=${selectedGenreId}`)
+          .then(response => response.json())
+          .then(data => {
+            subgenreSelect.innerHTML = '<option value="">サブジャンルを選択してください</option>';
+            data.subgenres.forEach(subgenre => {
+              let option = document.createElement('option');
+              option.value = subgenre.id;
+              option.textContent = subgenre.name;
+              subgenreSelect.appendChild(option);
+            });
+
+            // サーバー側で設定された選択済みのサブジャンルを復元
+            const selectedSubgenreId = subgenreSelect.getAttribute('data-selected-id');
+            if (selectedSubgenreId) {
+              subgenreSelect.value = selectedSubgenreId;
+            }
+          });
+      }
+    }
+  }
+
+  // Turboフレームのロード後にイベントリスナーを追加
+  document.addEventListener('turbo:frame-load', function () {
+    attachGenreChangeEventListener();
+    updateSubgenreFromInitialState();
+  });
+
+  // ページ初回読み込み時にもイベントリスナーを追加
+  document.addEventListener('DOMContentLoaded', function () {
+    attachGenreChangeEventListener();
+    updateSubgenreFromInitialState();
+  });
+
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= raw Rails.application.credentials.google_maps[:api_key] %>&callback=initMap" async defer></script>
