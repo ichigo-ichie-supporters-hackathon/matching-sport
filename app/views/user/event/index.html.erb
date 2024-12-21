@@ -3,7 +3,7 @@
 <h3>すでにマッチングしているイベント</h3>
 <% @events.where("start_time >= ?", Time.current).each do |event| %>
   <div class="event-list">
-  <% if event.is_matched == true %>
+  <% if event.matched_id != nil %>
     <div class="event-card">
       <div class="event-header">
         <h2><%= event.address %></h2>
@@ -30,7 +30,7 @@
 <h3>まだマッチングしていないイベント</h3>
 <% @events.where("start_time >= ?", Time.current).each do |event| %>
   <div class="event-list">
-  <% if event.is_matched == false %>
+  <% if event.matched_id == nil %>
     <div class="event-card">
       <div class="event-header">
         <h2><%= event.address %></h2>
@@ -57,7 +57,7 @@
 <h3>過去のイベント</h3>
 <% @events.where("start_time < ?", Time.current).each do |event| %>
   <div class="event-list">
-    <% if event.is_matched == true %>
+    <% if event.matched_id != nil %>
     <div class="event-card">
       <div class="event-header">
         <h2><%= event.address %></h2>
@@ -84,7 +84,7 @@
 <h3>マッチングできなかった過去のイベント</h3>
 <% @events.where("start_time < ?", Time.current).each do |event| %>
   <div class="event-list">
-    <% if event.is_matched == false %>
+    <% if event.matched_id == nil %>
     <div class="event-card">
       <div class="event-header">
         <h2><%= event.address %></h2>
