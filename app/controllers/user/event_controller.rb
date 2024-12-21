@@ -90,13 +90,45 @@ class User::EventController < ApplicationController
     # 時間でまず絞り込む
     matching_events = matching_events.where("start_time <= ? AND end_time >= ?", new_event.end_time, new_event.start_time)
 
-     # 時間と場所が近いイベントを絞り込み
+     # 場所が5km以内のイベントを絞り込み & 条件(マッチングしたくない性別、年齢)に合致するか
+     # 二人だけなら考慮できる、3人以上は勘弁
      matching_events = matching_events.select do |event|
       location_close = Geocoder::Calculations.distance_between([event.latitude, event.longitude], [new_event.latitude, new_event.longitude]) < 5 # 5km以内
-      location_close
-    end
-    # TODO: 条件(マッチングしたくない性別、年齢)に合致するか 
-    # 二人だけなら考慮できる、3人以上は勘弁
+      # 性別と年齢の条件を確認
+      gender_matches = true
+      age_matches = true
+      if new_event.people_count == 2
+        target_user = User.find(event.user_id)
+        creating_user = User.find(new_event.user_id)
+        # 性別が指定されている場合、target_userの性別がマッチしない場合は除外
+        if new_event.unmetched_gender.present? && target_user.gender_before_type_cast == new_event.unmetched_gender 
+          gender_matches = false
+        end
+
+        if event.unmetched_gender.present? && creating_user.gender_before_type_cast == event.unmetched_gender
+          gender_matches = false
+        end
+  
+        # 年齢の条件を確認
+        if new_event.unmatched_age_min.present? && target_user.age < new_event.unmatched_age_min
+          age_matches = false
+        end
+
+        if event.unmatched_age_min.present? && creating_user.age < event.unmatched_age_min
+          age_matches = false
+        end
+  
+        if new_event.unmatched_age_max.present? && target_user.age > new_event.unmatched_age_max
+          age_matches = false
+        end          
+
+        if event.unmatched_age_max.present? && creating_user.age > event.unmatched_age_max
+          age_matches = false
+        end
+      end
+      # 最終的に場所が近く、性別と年齢が合致し、条件に合う場合のみマッチング
+      location_close && gender_matches && age_matches
+    end    
      
     # 最も近いイベントを選択する TODO: 改良の余地あり？
     best_match_event = matching_events.min_by(&:start_time)

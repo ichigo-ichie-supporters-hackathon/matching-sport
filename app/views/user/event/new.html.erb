@@ -65,9 +65,12 @@
       <%= form.select :people_count, options_for_select((2..4).map { |n| [n.to_s, n] }), { prompt: '人数を選択してください' }, id: 'people_count' %>
     </div>
 
-    <div id="unmatched_gender_div" style="display: none;">
-      <%= form.label :unmatched_gender, "マッチングを希望しない性別（任意）" %>
-      <%= form.select :unmatched_gender, options_for_select([['その他', nil], ['男性', 'male'], ['女性', 'female']]), { prompt: 'マッチングを希望しない性別を選択してください' }, id: 'unmatched_gender' %>
+    <div id="unmetched_gender_div" style="display: none;">
+      <%= form.label :unmetched_gender, "マッチングを希望しない性別（任意）" %>
+    <%= form.select :unmetched_gender, 
+    [[ "その他", 0 ], [ "男性", 1 ], [ "女性", 2 ]], 
+    { include_blank: "マッチングを希望しない性別を選択してください" }, 
+    id: "unmetched_gender" %>      
     </div>
 
     <div id="unmatched_age_min_div" style="display: none;">
@@ -219,7 +222,7 @@
   // people_countが2に選ばれたときに任意の質問（性別や年齢に関する質問）を表示する
   document.addEventListener('DOMContentLoaded', function () {
   const peopleCountSelect = document.getElementById('people_count');
-  const unmatchedGenderDiv = document.getElementById('unmatched_gender_div');
+  const unmatchedGenderDiv = document.getElementById('unmetched_gender_div');
   const unmatchedAgeMinDiv = document.getElementById('unmatched_age_min_div');
   const unmatchedAgeMaxDiv = document.getElementById('unmatched_age_max_div');
 
