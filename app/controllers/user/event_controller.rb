@@ -21,6 +21,12 @@ class User::EventController < ApplicationController
       load_genres_and_subgenres
       render :new, status: :unprocessable_entity and return
     end
+
+    if @event.start_time.blank? || @event.end_time.blank?
+      @event.errors.add(:start_time, '開始時間と終了時間を入力してください')
+      load_genres_and_subgenres
+      render :new, status: :unprocessable_entity and return
+    end
   
     if @event.start_time > @event.end_time
       @event.errors.add(:end_time, "終了時間は開始時間より後である必要があります")
