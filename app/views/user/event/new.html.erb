@@ -65,6 +65,21 @@
       <%= form.select :people_count, options_for_select((2..4).map { |n| [n.to_s, n] }), { prompt: '人数を選択してください' }, id: 'people_count' %>
     </div>
 
+    <div id="unmatched_gender_div" style="display: none;">
+      <%= form.label :unmatched_gender, "マッチングを希望しない性別（任意）" %>
+      <%= form.select :unmatched_gender, options_for_select([['その他', nil], ['男性', 'male'], ['女性', 'female']]), { prompt: 'マッチングを希望しない性別を選択してください' }, id: 'unmatched_gender' %>
+    </div>
+
+    <div id="unmatched_age_min_div" style="display: none;">
+      <%= form.label :unmatched_age_min, "年齢の下限（任意）" %>
+      <%= form.number_field :unmatched_age_min, id: 'unmatched_age_min', placeholder: '年齢の下限を入力してください' %>
+    </div>
+
+    <div id="unmatched_age_max_div" style="display: none;">
+      <%= form.label :unmatched_age_max, "年齢の上限（任意）" %>
+      <%= form.number_field :unmatched_age_max, id: 'unmatched_age_max', placeholder: '年齢の上限を入力してください' %>
+    </div>
+
     <div>
       <%= form.label :position, "自分の行いたい役割" %>
       <%= form.text_field :position, id: 'position', placeholder: '例: ピッチャー' %>
@@ -201,7 +216,31 @@
     attachGenreChangeEventListener();
     updateSubgenreFromInitialState();
   });
+  // people_countが2に選ばれたときに任意の質問（性別や年齢に関する質問）を表示する
+  document.addEventListener('DOMContentLoaded', function () {
+  const peopleCountSelect = document.getElementById('people_count');
+  const unmatchedGenderDiv = document.getElementById('unmatched_gender_div');
+  const unmatchedAgeMinDiv = document.getElementById('unmatched_age_min_div');
+  const unmatchedAgeMaxDiv = document.getElementById('unmatched_age_max_div');
 
+  // 初期状態で表示・非表示の設定
+  toggleMatchingQuestions();
+
+  // people_countが変更された時にトグルする
+  peopleCountSelect.addEventListener('change', toggleMatchingQuestions);
+
+  function toggleMatchingQuestions() {
+    if (peopleCountSelect.value == '2') {
+      unmatchedGenderDiv.style.display = 'block';
+      unmatchedAgeMinDiv.style.display = 'block';
+      unmatchedAgeMaxDiv.style.display = 'block';
+    } else {
+      unmatchedGenderDiv.style.display = 'none';
+      unmatchedAgeMinDiv.style.display = 'none';
+      unmatchedAgeMaxDiv.style.display = 'none';
+    }
+  }
+});
 
 </script>
 

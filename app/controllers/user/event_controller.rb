@@ -34,6 +34,12 @@ class User::EventController < ApplicationController
       load_genres_and_subgenres
       render :new, status: :unprocessable_entity and return
     end
+
+    if @event.unmatched_age_min.present? && @event.unmatched_age_max.present? && @event.unmatched_age_min > @event.unmatched_age_max
+      @event.errors.add(:unmatched_age_max, " マッチングを希望しない年齢の上限は下限以上である必要があります")
+      load_genres_and_subgenres
+      render :new, status: :unprocessable_entity and return
+    end
   
     if @event.save
       # マッチングのアルゴリズムを実装する
