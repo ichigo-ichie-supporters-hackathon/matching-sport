@@ -1,5 +1,7 @@
 class User::EventController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_event, only: [:show]
+
 
   def index
     @events = current_user.events
@@ -47,8 +49,8 @@ class User::EventController < ApplicationController
   end
 
   def show
-    @event = current_user.events.find_by(id: params[:id])
-    
+    @main_event = @event.matched_id.nil? ? @event : @event.matched_event
+    @linked_events = @main_event.matching_events
   end
 
   def update
@@ -65,6 +67,10 @@ class User::EventController < ApplicationController
     params.require(:event).permit(
       :address, :latitude, :longitude, :start_time, :end_time, :comment, :people_count, :position,:genre_id, :subgenre_id, :user_id, :unmetched_gender, :unmatched_age_min, :unmatched_age_max, :is_matched, :is_accepted
     )
+  end
+
+  def set_event
+    @event = Event.find(params[:id])
   end
 
 end

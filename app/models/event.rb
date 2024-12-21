@@ -6,4 +6,7 @@ class Event < ApplicationRecord
 
 
   validates :address, :latitude, :longitude, :start_time, :end_time, :subgenre_id, :people_count, presence: true
+
+  scope :main_events, -> { where(matched_id: nil) } # メインイベントのスコープ
+  scope :matched_events, -> { where.not(matched_id: nil) } # マッチング済みイベントのスコープ
 end

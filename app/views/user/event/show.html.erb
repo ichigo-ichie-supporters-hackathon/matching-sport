@@ -1,26 +1,28 @@
-<h1>イベント詳細</h1>
+<div id="event-detail">
+  <h1>イベント詳細</h1>
 
-<div class="event-details">
-  <h2><%= @event.address %></h2>
-  <p><strong>開始時間:</strong> <%= @event.start_time.strftime('%Y年%m月%d日 %H:%M') %></p>
-  <p><strong>終了時間:</strong> <%= @event.end_time.strftime('%Y年%m月%d日 %H:%M') %></p>
-  <p><strong>コメント:</strong> <%= @event.comment %></p>
-  <p><strong>参加募集人数:</strong> <%= @event.people_count %></p>
-</div>
+  <div class="event-info">
+    <h2>イベント情報</h2>
+    <p><strong>住所:</strong> <%= @main_event.address %></p>
+    <p><strong>開始時間:</strong> <%= @main_event.start_time.strftime('%Y年%m月%d日 %H:%M') %></p>
+    <p><strong>終了時間:</strong> <%= @main_event.end_time.strftime('%Y年%m月%d日 %H:%M') %></p>
+    <p><strong>コメント:</strong> <%= @main_event.comment %></p>
+    <p><strong>参加人数:</strong> <%= @main_event.people_count %></p>
+    <p><strong>作成者:</strong> <%= @main_event.user.name %> (<%= @main_event.user.gender == 0 ? '男性' : '女性' %>)</p>
+  </div>
 
-<% if @is_owner %>
-  <h3>マッチング情報</h3>
-  <% if @matching_users.any? %>
-    <ul>
-      <% @matching_users.each do |match| %>
-        <li>
-          <strong>ユーザー:</strong> <%= match.user.name %> (<%= match.user.email %>)
-        </li>
+  <% if @linked_events.exists? %>
+    <div class="matched-events">
+      <h2>マッチングしたイベント</h2>
+      <% @linked_events.each do |event| %>
+        <div class="linked-event">
+          <p><strong>住所:</strong> <%= event.address %></p>
+          <p><strong>作成者:</strong> <%= event.user.name %> (<%= event.user.gender == 0 ? '男性' : '女性' %>)</p>
+          <p><strong>コメント:</strong> <%= event.comment %></p>
+        </div>
       <% end %>
-    </ul>
+    </div>
   <% else %>
-    <p>現在、マッチングしたユーザーはいません。</p>
+    <p class="no-matched-events">マッチングイベントはありません。</p>
   <% end %>
-<% else %>
-  <p>このイベントはあなたが作成したものではありません。</p>
-<% end %>
+</div>
