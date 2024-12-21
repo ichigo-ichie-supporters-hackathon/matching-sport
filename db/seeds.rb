@@ -1,112 +1,68 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
+# Define Genres and SubGenres
+genres = [
+  { name: '野球観戦', subgenres: ['巨人観戦', '阪神タイガース観戦', '広島カープ観戦', '中日ドラゴンズ観戦', '横浜DeNAベイスターズ観戦'] },
+  { name: '野球', subgenres: ['キャッチボール', '草野球試合', '広場でトスバッティング', 'バッティングセンター', '守備練習'] },
+  { name: 'サッカー観戦', subgenres: ['浦和レッズ観戦', '鹿島アントラーズ観戦', '川崎フロンターレ観戦', 'ガンバ大阪観戦', 'ヴィッセル神戸観戦'] },
+  { name: 'サッカー', subgenres: ['フットサル', 'リフティング練習', 'シュート練習', 'パス練習', 'ミニゲーム'] },
+  { name: 'バスケットボール', subgenres: ['1on1', 'フリースロー練習', 'シュート練習', '3ポイント練習', 'ピックアップゲーム'] },
+  { name: 'テニス', subgenres: ['ダブルスゲーム', 'サーブ練習', 'ラリー練習', 'ボレー練習', 'テニススクール'] },
+  { name: 'マラソン', subgenres: ['5kmランニング', '10kmランニング', 'ハーフマラソン', 'フルマラソン', 'リレーランニング'] },
+  { name: 'スキー・スノーボード', subgenres: ['スキー練習', 'スノーボード練習', 'ゲレンデ観光', 'ナイトスキー', '初心者レッスン'] }
+]
+
+# Create Users
 5.times do |n|
   User.create!(
     name: "テスト太郎#{n}",
-    age: n,
+    age: 20 + n,
     gender: rand(1..2),
     email: "test#{n}@example.com",
-    password: "password",
+    password: "password"
   )
 end
 
-5.times do |n|
-  Genre.create!(
-    name: "スポーツ#{n}"
-  )
+# Create Genres and SubGenres
+genres.each_with_index do |genre, index|
+  created_genre = Genre.create!(name: genre[:name])
+  genre[:subgenres].each do |subgenre_name|
+    Subgenre.create!(
+      name: subgenre_name,
+      genre_id: created_genre.id
+    )
+  end
 end
 
-5.times do |n|
-  Subgenre.create!(
-    name: "サブスポーツ#{n}",
-    genre_id: Genre.find(n+1).id
-  )
-end
+# Create Events
+locations = [
+  { address: '東京ドーム', latitude: 35.705439, longitude: 139.751682 },
+  { address: '埼玉スタジアム2002', latitude: 35.903586, longitude: 139.713686 },
+  { address: '甲子園球場', latitude: 34.721424, longitude: 135.362156 },
+  { address: '味の素スタジアム', latitude: 35.664041, longitude: 139.527577 },
+  { address: '横浜スタジアム', latitude: 35.443707, longitude: 139.640149 }
+]
 
-address = ["東京都新宿区", "茨城県つくば市", "岡山県岡山市", "北海道札幌", "沖縄県那覇市"]
+subgenres = Subgenre.all
+users = User.all
 
-# Event.create!(
-#     address: "同じアドレス",
-#     latitude: 0,
-#     longitude: 0,
-#     start_time: DateTime.now,
-#     end_time: DateTime.now,
-#     comment: "コメント",
-#     people_count: 2,
-#     position: "ポジション",
-#     subgenre_id: Subgenre.find(1).id,
-#     user_id: User.find(1).id,
-#     unmetched_gender: 1,
-#     unmatched_age_min: 10,
-#     unmatched_age_max: 30,
-#     : f,
-#     is_accepted: false
-#   )
-5.times do |n|
-   Event.create!(
-    address: "#{address[n]}",
-    latitude: rand * 180 - 90,
-    longitude: rand * 360 - 180,
-    start_time: DateTime.now + n.day,
-    end_time: DateTime.now + n.day + n.hours,
-    comment: "コメント#{n}",
-    people_count: n + 1,
-    position: "ポジション#{n}",
-    subgenre_id: Subgenre.find(n+1).id,
-    user_id: User.find(n+1).id,
+200.times do |n|
+  location = locations.sample
+  Event.create!(
+    address: location[:address],
+    latitude: location[:latitude],
+    longitude: location[:longitude],
+    start_time: DateTime.now + n.hours,
+    end_time: DateTime.now + n.hours + rand(1..5).hours,
+    comment: "イベントコメント#{n}",
+    people_count: rand(1..10),
+    position: "ポジション#{n % 5}",
+    subgenre_id: subgenres.sample.id,
+    user_id: users.sample.id,
     unmetched_gender: rand(1..2),
-    unmatched_age_min: n + 10,
-    unmatched_age_max: (n+10)*3,
-    matched_id: nil,
+    unmatched_age_min: rand(18..30),
+    unmatched_age_max: rand(31..50),
+    matched_id: (n % 10 == 0 ? Event.first&.id : nil),
     is_accepted: [true, false].sample
   )
 end
 
-# 場所と日時が一致しているモデル
-Event.create!(
-    address: "同じアドレス",
-    latitude: 0,
-    longitude: 0,
-    start_time: DateTime.now,
-    end_time: DateTime.now,
-    comment: "コメント",
-    people_count: 2,
-    position: "ポジション",
-    subgenre_id: Subgenre.find(1).id,
-    user_id: User.find(1).id,
-    unmetched_gender: 1,
-    unmatched_age_min: 10,
-    unmatched_age_max: 30,
-    matched_id: 1,
-    is_accepted: false
-  )
-#   Event.create!(
-#     address: "同じアドレス",
-#     latitude: 0,
-#     longitude: 0,
-#     start_time: DateTime.now,
-#     end_time: DateTime.now,
-#     comment: "コメント",
-#     people_count: 2,
-#     position: "ポジション",
-#     subgenre_id: Subgenre.find(1).id,
-#     user_id: User.find(2).id,
-#     unmetched_gender: 1,
-#     unmatched_age_min: 10,
-#     unmatched_age_max: 30,
-#     is_matched: false,
-#     is_accepted: false
-#   )
-  
-
-5.times do |n|
-  MatchingEventGroup.create!(
-    user_id: User.find(n+1).id, 
-    event_id: Event.find(n+1).id
-  )
-end
+puts 'Seeding completed!'
