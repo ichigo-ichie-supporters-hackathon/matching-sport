@@ -70,4 +70,7 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD ["sh", "-c", "bin/rails db:migrate && bin/rails db:seed && bin/rails server"]
+
+CMD ["sh", "-c", "bin/rails db:migrate && bin/rails server"]
+# Seed.rbに変更があった場合、以下のコマンドを実行する
+# CMD ["sh", "-c", "bin/rails db:migrate:reset && bin/rails db:seed && bin/rails server"]
