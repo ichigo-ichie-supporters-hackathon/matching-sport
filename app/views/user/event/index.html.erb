@@ -41,14 +41,16 @@
                 <p><strong>参加募集人数:</strong> <%= event.people_count %> 人</p>
                 <p><strong>希望ポジション:</strong> <%= event.position %></p>
                 <p><strong>サブジャンル:</strong> <%= event.subgenre.name %></p>
-                <% if  event.unmetched_gender == 1 %>
-                  <% gender = "男性" %>
+                <p><strong>希望しない性別:</strong> 
+                <% if  event.unmetched_gender == 0 %>
+                  その他
+                <%  elsif event.unmetched_gender == 1 %>
+                  男性
                 <%  elsif event.unmetched_gender == 2 %>
-                  <% gender = "女性" %>
+                  女性
                 <% else %>
-                  <% gender = "選択なし" %>
-                <% end %>
-                <p><strong>希望しない性別:</strong> <%= gender %></p>
+                  選択なし
+                <% end %></p>
                 <p><strong>希望しない年齢:</strong> <%= event.unmatched_age_min %>歳 ～ <%= event.unmatched_age_max %>歳</p>
                 <p><strong>承認状況:</strong> <%= event.is_accepted ? '✔ 承認済み' : '⏳ 未承認' %></p>
               </div>
